@@ -7,6 +7,19 @@ const restartButton = document.getElementById('restartButton');
 canvas.width = 800;
 canvas.height = 600;
 
+// Ajustar tamaño del canvas para móviles
+function resizeCanvas() {
+    const maxWidth = Math.min(window.innerWidth - 20, 800);
+    const maxHeight = Math.min(window.innerHeight - 150, 600);
+    const ratio = Math.min(maxWidth / 800, maxHeight / 600);
+    
+    canvas.style.width = (800 * ratio) + 'px';
+    canvas.style.height = (600 * ratio) + 'px';
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
 // Jugador
 const player = {
     x: canvas.width / 2,
@@ -35,6 +48,16 @@ const keys = {
     space: false
 };
 
+// Controles táctiles
+const leftButton = document.getElementById('leftButton');
+const rightButton = document.getElementById('rightButton');
+const shootButton = document.getElementById('shootButton');
+
+let touchControls = {
+    left: false,
+    right: false
+};
+
 // Eventos de teclado
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') keys.left = true;
@@ -46,6 +69,30 @@ document.addEventListener('keyup', (e) => {
     if (e.key === 'ArrowLeft') keys.left = false;
     if (e.key === 'ArrowRight') keys.right = false;
     if (e.key === ' ') keys.space = false;
+});
+
+// Eventos táctiles
+leftButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    touchControls.left = true;
+});
+
+leftButton.addEventListener('touchend', () => {
+    touchControls.left = false;
+});
+
+rightButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    touchControls.right = true;
+});
+
+rightButton.addEventListener('touchend', () => {
+    touchControls.right = false;
+});
+
+shootButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    createBullet();
 });
 
 // Función de reinicio
@@ -96,11 +143,11 @@ function createObstacle() {
 function update() {
     if (gameOver) return;
 
-    // Mover jugador
-    if (keys.left && player.x > 0) {
+    // Mover jugador (teclado o táctil)
+    if ((keys.left || touchControls.left) && player.x > 0) {
         player.x -= player.speed;
     }
-    if (keys.right && player.x < canvas.width - player.width) {
+    if ((keys.right || touchControls.right) && player.x < canvas.width - player.width) {
         player.x += player.speed;
     }
 

@@ -13,6 +13,16 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x87CEEB, 1);
 document.querySelector('.game-container').appendChild(renderer.domElement);
 
+// Ajustar tamaño para móviles
+function resizeGame() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+window.addEventListener('resize', resizeGame);
+resizeGame();
+
 // Variables del juego
 let score = 0;
 const scoreElement = document.querySelector('#score span');
@@ -86,15 +96,43 @@ document.addEventListener('keyup', (e) => {
     if (e.key === 'ArrowRight') keys.right = false;
 });
 
+// Controles táctiles
+const leftButton = document.getElementById('leftButton');
+const rightButton = document.getElementById('rightButton');
+
+let touchControls = {
+    left: false,
+    right: false
+};
+
+// Eventos táctiles
+leftButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    touchControls.left = true;
+});
+
+leftButton.addEventListener('touchend', () => {
+    touchControls.left = false;
+});
+
+rightButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    touchControls.right = true;
+});
+
+rightButton.addEventListener('touchend', () => {
+    touchControls.right = false;
+});
+
 // Función de actualización del juego
 function update() {
     if (gameOver) return;
 
-    // Mover jugador
-    if (keys.left && player.position.x > -4) {
+    // Mover jugador (teclado o táctil)
+    if ((keys.left || touchControls.left) && player.position.x > -4) {
         player.position.x -= playerSpeed;
     }
-    if (keys.right && player.position.x < 4) {
+    if ((keys.right || touchControls.right) && player.position.x < 4) {
         player.position.x += playerSpeed;
     }
 
@@ -132,13 +170,6 @@ function animate() {
     update();
     renderer.render(scene, camera);
 }
-
-// Manejar redimensionamiento de ventana
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
 
 // Iniciar juego
 animate(); 

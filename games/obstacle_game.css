@@ -63,4 +63,54 @@ body {
 
 .menu-button:hover {
     background-color: #27ae60;
+}
+
+/* Controles móviles */
+.mobile-controls {
+    display: none; /* Por defecto oculto, se mostrará en móviles */
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    padding: 10px;
+}
+
+.direction-controls {
+    display: flex;
+    justify-content: space-between;
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+.control-button {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    background-color: rgba(52, 152, 219, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.shoot-button {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    background-color: rgba(231, 76, 60, 0.7);
+}
+
+.control-button:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+/* Media query para mostrar controles en móviles */
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: block;
+    }
 } 
